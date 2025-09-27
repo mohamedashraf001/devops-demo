@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  backend:
+    image: mohamedashraf001/fastapi:latest
+    container_name: fastapi_app
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
+    depends_on:
+      - db
+    restart: always
+
+  frontend:
+    image: mohamedashraf001/angular:latest
+    container_name: angular_app
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    restart: always
+
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+volumes:
+  postgres_data:
